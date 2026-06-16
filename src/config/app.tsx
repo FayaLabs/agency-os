@@ -5,7 +5,6 @@ import { createCrmPlugin } from '@fayz-ai/plugin-crm'
 import { createFinancialPlugin } from '@fayz-ai/plugin-financial'
 import { createCustomFormsPlugin } from '@fayz-ai/plugin-forms'
 import { createCoursesPlugin } from '@fayz-ai/plugin-courses'
-import { createConversationsPlugin } from '@fayz-ai/plugin-conversations'
 import { createMarketingPlugin } from '@fayz-ai/plugin-marketing'
 import { createAutomationsPlugin } from '@fayz-ai/plugin-automations'
 import { createSitesPlugin } from '@fayz-ai/plugin-sites'
@@ -28,11 +27,10 @@ export const agencyOsAppConfig: FayzAppConfig = {
   name: 'Agency OS',
   logo: React.createElement(Logo),
   layout: 'sidebar',
-  supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-  supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+
   locale: { default: 'en', supported: ['en'] },
   auth: {
-    adapter: import.meta.env.VITE_SUPABASE_URL ? 'supabase' : 'mock',
+    adapter: 'mock',
     requireAuth: true,
     loginLayout: 'split',
     loginTagline: 'The all-in-one platform for agencies',
@@ -41,14 +39,12 @@ export const agencyOsAppConfig: FayzAppConfig = {
     showOAuth: true,
     oauthProviders: ['google'],
   },
-  org: { adapter: import.meta.env.VITE_SUPABASE_URL ? 'supabase' : 'mock', multiOrg: true },
+  org: { adapter: 'mock', multiOrg: true },
   permissions: agencyPermissions,
   theme: agencyTheme,
   plugins: [
     // 0 — Dashboard
     agencyDashboardPlugin,
-    // 1 — Conversations (unified inbox) — flagship new SDK plugin
-    createConversationsPlugin({ navPosition: 1 }),
     // 2 — Calendars (appointments / booking)
     createAgendaPlugin({
       navPosition: 2,
