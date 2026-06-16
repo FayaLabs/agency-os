@@ -1,5 +1,6 @@
 import React from 'react'
 import type { FayzAppConfig } from '@fayz-ai/saas'
+import { createConversationsPlugin } from '@fayz-ai/plugin-conversations'
 import { createAgendaPlugin } from '@fayz-ai/plugin-agenda'
 import { createCrmPlugin } from '@fayz-ai/plugin-crm'
 import { createFinancialPlugin } from '@fayz-ai/plugin-financial'
@@ -45,6 +46,8 @@ export const agencyOsAppConfig: FayzAppConfig = {
   plugins: [
     // 0 — Dashboard
     agencyDashboardPlugin,
+    // 1 — Conversations (unified inbox) — flagship new SDK plugin
+    createConversationsPlugin({ navPosition: 1 }),
     // 2 — Calendars (appointments / booking)
     createAgendaPlugin({
       navPosition: 2,
