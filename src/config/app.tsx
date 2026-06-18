@@ -1,5 +1,5 @@
 import React from 'react'
-import type { FayzAppConfig } from '@fayz-ai/saas'
+import { createCrudPage, createArchetypeLookup, type FayzAppConfig } from '@fayz-ai/saas'
 import { createAgendaPlugin } from '@fayz-ai/plugin-agenda'
 import { createCrmPlugin } from '@fayz-ai/plugin-crm'
 import { createFinancialPlugin } from '@fayz-ai/plugin-financial'
@@ -16,8 +16,18 @@ import { agencyDashboardPlugin } from './dashboard'
 import { agencyReportsPlugin } from './reports'
 import { agencyPermissions } from './permissions'
 import { agencyTheme } from './theme'
+import { contactEntity } from '../types/contact'
 
 const currency = { code: 'USD', locale: 'en-US', symbol: '$' }
+
+// Contacts lookup — the agency's central people directory (person kind=contact).
+// Wired into Payments so "Receive from" resolves real contacts; without it there
+// is no concept of who is paying / receiving.
+const contactLookup = createArchetypeLookup({
+  archetype: 'person',
+  kind: ['contact'],
+  kindLabels: { contact: 'Contact' },
+})
 
 /**
  * Agency OS — a GoHighLevel-style all-in-one platform for agencies, composed
@@ -29,7 +39,9 @@ export const agencyOsAppConfig: FayzAppConfig = {
   logo: React.createElement(Logo),
   layout: 'sidebar',
   supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-  supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  supabaseAnonKey:
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
+    import.meta.env.VITE_SUPABASE_ANON_KEY,
   locale: { default: 'en', supported: ['en'] },
   auth: {
     adapter: import.meta.env.VITE_SUPABASE_URL ? 'supabase' : 'mock',
@@ -83,6 +95,10 @@ export const agencyOsAppConfig: FayzAppConfig = {
     createFinancialPlugin({
       navPosition: 9,
       currency,
+      // Mandatory: ties invoices to a payer/receiver from the contacts directory.
+      contactLookup,
+      // No product/service catalog in the agency vertical — invoice lines are
+      // free-form, so they default to "Other" and the user types directly.
       modules: {
         receivables: true,
         payables: false,
@@ -106,6 +122,18 @@ export const agencyOsAppConfig: FayzAppConfig = {
     }),
     // 12 — Reporting
     agencyReportsPlugin,
+  ],
+  pages: [
+    // Contacts — the central people directory, placed just below Calendars
+    // (navPosition 2). person(kind=contact) + public.contacts Ring-2 extension.
+    {
+      path: '/contacts',
+      label: 'Contacts',
+      icon: 'Contact',
+      position: 2.5,
+      component: createCrudPage(contactEntity),
+      permission: { feature: 'contacts', action: 'read' },
+    },
   ],
   chat: {
     title: 'Agency Assistant',

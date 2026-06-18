@@ -13,6 +13,7 @@ const localSdkAliases = {
   '@fayz-ai/ui': resolve(fayzSdk, 'packages/ui/src'),
   '@fayz-ai/saas': resolve(fayzSdk, 'packages/saas/src'),
   '@fayz-ai/courses': resolve(fayzSdk, 'packages/courses/src'),
+  '@fayz-ai/db': resolve(fayzSdk, 'packages/db/src'),
   // Reused domain plugins
   '@fayz-ai/plugin-dashboard': resolve(fayzSdk, 'plugins/plugin-dashboard/src'),
   '@fayz-ai/plugin-agenda': resolve(fayzSdk, 'plugins/plugin-agenda/src'),
