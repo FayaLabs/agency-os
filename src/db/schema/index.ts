@@ -10,7 +10,7 @@
 // the delta. Enabling a plugin = adding one re-export line here.
 
 // Ring 0 — spine references (baseline snapshot; never re-created live)
-export { tenants, persons, orders } from '@fayz-ai/db'
+export { tenants, persons, orders } from '@fayz-ai/saas/db'
 
 // Ring 2 — agency-owned extensions
 export { contacts } from './contacts'

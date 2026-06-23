@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, tenantId, timestamps, persons } from '@fayz-ai/db'
+import { pgTable, uuid, text, tenantId, timestamps, persons } from '@fayz-ai/saas/db'
 
 // ---------------------------------------------------------------------------
 // Ring-2 archetype extension: agency contacts.
