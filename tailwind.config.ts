@@ -1,12 +1,18 @@
 import type { Config } from 'tailwindcss'
-import { fayzUiPreset } from '../../fayz-sdk/packages/ui/src/theme/preset'
+// Pure preset from the published package — resolves in both the Fayz sandbox
+// (npm) and local dev. Never the relative ../../fayz-sdk path (absent in prod).
+import { fayzUiPreset } from '@fayz-ai/ui/preset'
 
 export default {
   presets: [fayzUiPreset as Config],
   content: [
     './index.html',
     './src/**/*.{ts,tsx}',
-    // Native SDK shell + UI + plugins (Tailwind must see their class names).
+    // Production / sandbox: SDK installed in node_modules (packages ship src/).
+    './node_modules/@fayz-ai/ui/src/**/*.{ts,tsx}',
+    './node_modules/@fayz-ai/saas/src/**/*.{ts,tsx}',
+    './node_modules/@fayz-ai/plugin-*/src/**/*.{ts,tsx}',
+    // Local dev: SDK as a sibling checkout (matches nothing in production).
     '../../fayz-sdk/packages/ui/src/**/*.{ts,tsx}',
     '../../fayz-sdk/packages/saas/src/**/*.{ts,tsx}',
     '../../fayz-sdk/plugins/*/src/**/*.{ts,tsx}',
