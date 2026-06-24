@@ -28,7 +28,7 @@
     "@fayz-ai/plugin-reputation": "^0.2.2",
     "@fayz-ai/plugin-sites": "^0.2.2",
     "@fayz-ai/saas": "^0.6.0",
-    "@fayz-ai/sdk": "^0.6.0",
+    "@fayz-ai/sdk": "^0.6.1",
     "@fayz-ai/ui": "^0.6.0",
     "lucide-react": "^0.577.0",
     "react": "^18.3.0",
