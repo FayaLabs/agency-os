@@ -1,0 +1,42 @@
+{
+  "manifestVersion": 2,
+  "id": "agency-os",
+  "name": "Agency OS",
+  "backend": { "provider": "supabase" },
+  "locale": { "default": "pt-BR", "supported": ["pt-BR", "en"] },
+  "entities": [
+    { "id": "contacts", "label": "Contacts" },
+    { "id": "leads", "label": "Leads" },
+    { "id": "deals", "label": "Deals" },
+    { "id": "appointments", "label": "Appointments" },
+    { "id": "invoices", "label": "Invoices" },
+    { "id": "courses", "label": "Courses" },
+    { "id": "conversations", "label": "Conversations" },
+    { "id": "campaigns", "label": "Campaigns" }
+  ],
+  "surfaces": {
+    "admin": {
+      "scaffold": "admin",
+      "options": {
+        "layout": "sidebar",
+        "requireAuth": true,
+        "title": "Agency OS",
+        "description": "All-in-one agency operating system — CRM, scheduling, conversations, marketing, financial, courses, sites and more."
+      },
+      "plugins": [
+        { "id": "dashboard", "enabled": true, "config": { "label": "Dashboard" } },
+        { "id": "crm", "enabled": true, "config": { "label": "CRM", "description": "Contacts, leads, deals and pipeline." } },
+        { "id": "agenda", "enabled": true, "config": { "label": "Agenda", "description": "Scheduling and appointments." } },
+        { "id": "conversations", "enabled": true, "config": { "label": "Conversations", "description": "Unified inbox." } },
+        { "id": "marketing", "enabled": true, "config": { "label": "Marketing", "description": "Campaigns and channels." } },
+        { "id": "automations", "enabled": true, "config": { "label": "Automations", "description": "Workflows and triggers." } },
+        { "id": "financial", "enabled": true, "config": { "label": "Financial", "description": "Invoices and payments." } },
+        { "id": "forms", "enabled": true, "config": { "label": "Forms", "description": "Custom forms and documents." } },
+        { "id": "courses", "enabled": true, "config": { "label": "Cursos & Assinaturas", "description": "Sell courses, paid content, and memberships." } },
+        { "id": "reputation", "enabled": true, "config": { "label": "Reputation", "description": "Reviews and reputation." } },
+        { "id": "sites", "enabled": true, "config": { "label": "Sites", "description": "Landing pages and sites." } },
+        { "id": "reports", "enabled": true, "config": { "label": "Reports", "description": "Cross-module reporting." } }
+      ]
+    }
+  }
+}
