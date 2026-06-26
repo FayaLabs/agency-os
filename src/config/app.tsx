@@ -44,7 +44,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
     import.meta.env.VITE_SUPABASE_ANON_KEY,
   locale: { default: 'en', supported: ['en'] },
   auth: {
-    adapter: import.meta.env.VITE_SUPABASE_URL ? 'supabase' : 'mock',
+    adapter: 'mock',
     requireAuth: true,
     loginLayout: 'split',
     loginTagline: 'The all-in-one platform for agencies',
@@ -53,7 +53,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
     showOAuth: true,
     oauthProviders: ['google'],
   },
-  org: { adapter: import.meta.env.VITE_SUPABASE_URL ? 'supabase' : 'mock', multiOrg: true },
+  org: { adapter: 'mock', multiOrg: true },
   permissions: agencyPermissions,
   theme: agencyTheme,
   plugins: [
