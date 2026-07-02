@@ -38,10 +38,10 @@ export const agencyOsAppConfig: FayzAppConfig = {
   name: 'Agency OS',
   logo: React.createElement(Logo),
   layout: 'sidebar',
-  supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-  supabaseAnonKey:
-    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
-    import.meta.env.VITE_SUPABASE_ANON_KEY,
+  // Mock adapters — do not pass Supabase credentials so the SDK does not
+  // attempt a live connection and throw an unhandled rejection.
+  // Switch these (and auth/org adapters below) to 'supabase' once migrations
+  // have been applied via the Cloud SQL Editor.
   locale: { default: 'en', supported: ['en'] },
   auth: {
     adapter: 'mock',
