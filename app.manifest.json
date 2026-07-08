@@ -35,7 +35,8 @@
         { "id": "courses", "enabled": true, "config": { "label": "Cursos & Assinaturas", "description": "Sell courses, paid content, and memberships." } },
         { "id": "reputation", "enabled": true, "config": { "label": "Reputation", "description": "Reviews and reputation." } },
         { "id": "sites", "enabled": true, "config": { "label": "Sites", "description": "Landing pages and sites." } },
-        { "id": "reports", "enabled": true, "config": { "label": "Reports", "description": "Cross-module reporting." } }
+        { "id": "reports", "enabled": true, "config": { "label": "Reports", "description": "Cross-module reporting." } },
+        { "id": "admin", "enabled": true, "config": { "label": "Admin" } }
       ]
     }
   }
