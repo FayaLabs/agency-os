@@ -34,17 +34,29 @@ const contactLookup = createArchetypeLookup({
  * from Fayz SDK plugins. This is the sub-account ("location") surface: the
  * left-menu operational product. Runs on mock data (no Supabase env = mock).
  */
+// Live-backend gate (Industry Pools). The app stays on MOCK adapters by default;
+// flip VITE_SUPABASE_ENABLED=true (post pool conversion, M3) to pass real
+// Supabase credentials through to the SDK. When disabled, no creds are passed so
+// the SDK never attempts a live connection.
+const supabaseEnabled = import.meta.env.VITE_SUPABASE_ENABLED === 'true'
+const supabaseUrl = supabaseEnabled ? import.meta.env.VITE_SUPABASE_URL : undefined
+const supabaseAnonKey = supabaseEnabled
+  ? (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY)
+  : undefined
+
 export const agencyOsAppConfig: FayzAppConfig = {
   name: 'Agency OS',
   logo: React.createElement(Logo),
   layout: 'sidebar',
-  // Mock adapters — do not pass Supabase credentials so the SDK does not
-  // attempt a live connection and throw an unhandled rejection.
-  // Switch these (and auth/org adapters below) to 'supabase' once migrations
-  // have been applied via the Cloud SQL Editor.
+  // Backend credentials are only populated when VITE_SUPABASE_ENABLED === 'true'
+  // (see gate above). Left undefined the SDK falls back to mock adapters, so the
+  // app never opens a live connection until the pool is converted (Industry
+  // Pools M3) and the flag is flipped.
+  supabaseUrl,
+  supabaseAnonKey,
   locale: { default: 'en', supported: ['en'] },
   auth: {
-    adapter: 'mock',
+    adapter: supabaseEnabled ? 'supabase' : 'mock',
     requireAuth: true,
     loginLayout: 'split',
     loginTagline: 'The all-in-one platform for agencies',
@@ -53,7 +65,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
     showOAuth: true,
     oauthProviders: ['google'],
   },
-  org: { adapter: 'mock', multiOrg: true },
+  org: { adapter: supabaseEnabled ? 'supabase' : 'mock', multiOrg: true },
   permissions: agencyPermissions,
   theme: agencyTheme,
   plugins: [
