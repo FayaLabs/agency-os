@@ -2,7 +2,11 @@
   "manifestVersion": 2,
   "id": "agency-os",
   "name": "Agency OS",
-  "backend": { "provider": "supabase" },
+  "backend": {
+    "provider": "supabase",
+    "projectRef": "bcxumqjrduekrsasduwe",
+    "pool": "cluster-agency-br-01"
+  },
   "locale": { "default": "pt-BR", "supported": ["pt-BR", "en"] },
   "entities": [
     { "id": "contacts", "label": "Contacts" },
