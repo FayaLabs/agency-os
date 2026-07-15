@@ -34,3 +34,6 @@ pnpm-debug.log*
 .playwright-mcp/
 playwright-report/
 test-results/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
