@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 5190",
-    "dev:published-sdk": "FAYZ_SDK_SOURCE=published vite --port 5190",
+    "dev": "vite --port 5303 --strictPort",
+    "dev:published-sdk": "FAYZ_SDK_SOURCE=published vite --port 5303 --strictPort",
     "typecheck": "tsc -p tsconfig.local.json --noEmit",
     "build": "tsc -p tsconfig.local.json && FAYZ_SDK_SOURCE=local vite build",
     "build:published-sdk": "FAYZ_SDK_SOURCE=published tsc -p tsconfig.published.json && FAYZ_SDK_SOURCE=published vite build",
