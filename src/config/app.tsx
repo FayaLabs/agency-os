@@ -1,6 +1,6 @@
 import React from 'react'
 import { createCrudPage, createArchetypeLookup, type FayzAppConfig } from '@fayz-ai/saas'
-import { createAgendaPlugin } from '@fayz-ai/plugin-agenda'
+import { createAgendaPlugin, createGoogleCalendarPlugin } from '@fayz-ai/plugin-agenda'
 import { createCrmPlugin } from '@fayz-ai/plugin-crm'
 import { createFinancialPlugin } from '@fayz-ai/plugin-financial'
 import { createCustomFormsPlugin } from '@fayz-ai/plugin-forms'
@@ -11,6 +11,7 @@ import { createAutomationsPlugin } from '@fayz-ai/plugin-automations'
 import { createSitesPlugin } from '@fayz-ai/plugin-sites'
 import { createReputationPlugin } from '@fayz-ai/plugin-reputation'
 
+import { createOpenBankingPlugin } from '../plugins/openbanking'
 import { Logo } from '../components/Logo'
 import { agencyDashboardPlugin } from './dashboard'
 import { agencyReportsPlugin } from './reports'
@@ -94,7 +95,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
       domain: 'agency',
       navPosition: 5,
       currency: { code: 'USD', locale: 'en-US', symbol: '$' },
-      modules: { landingPages: true },
+      modules: { landingPages: true, blog: true },
     }),
     // 6 — Automations (workflows)
     createAutomationsPlugin({ navPosition: 6 }),
@@ -134,6 +135,12 @@ export const agencyOsAppConfig: FayzAppConfig = {
     }),
     // 12 — Reporting
     agencyReportsPlugin,
+    // Connector addons — reference integrations to standardize the connector
+    // contract (alongside RankLayer in Marketing). Each contributes a card to
+    // its host plugin's settings → Integrações tab (no top-level nav):
+    //   • Google Calendar → Agenda (OAuth)   • Tecnospeed PlugBank → Financeiro (api-key)
+    createGoogleCalendarPlugin(),
+    createOpenBankingPlugin(),
   ],
   pages: [
     // Contacts — the central people directory, placed just below Calendars
