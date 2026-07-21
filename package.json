@@ -7,6 +7,7 @@
     "dev": "vite --port 5303 --strictPort",
     "dev:published-sdk": "FAYZ_SDK_SOURCE=published vite --port 5303 --strictPort",
     "typecheck": "tsc -p tsconfig.local.json --noEmit",
+    "test:e2e": "playwright test",
     "build": "tsc -p tsconfig.local.json && FAYZ_SDK_SOURCE=local vite build",
     "build:published-sdk": "FAYZ_SDK_SOURCE=published tsc -p tsconfig.published.json && FAYZ_SDK_SOURCE=published vite build",
     "preview": "vite preview --port 5190",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@fayz-ai/cli": "^0.8.1",
+    "@playwright/test": "^1.61.1",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.0",
