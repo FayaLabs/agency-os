@@ -74,11 +74,37 @@ export const agencyOsAppConfig: FayzAppConfig = {
     agencyDashboardPlugin,
     // 1 — Conversations (unified inbox) — flagship new SDK plugin
     createConversationsPlugin({ navPosition: 1 }),
-    // 2 — Calendars (appointments / booking)
+    // 2 — Calendars (appointments / booking). An agency books MEETINGS with
+    // contacts — there is no service catalog, so the default 'appointment' type
+    // is redefined as a "Meeting" that requires a client but NO services (the
+    // stock default sets requiresServices:true, which made Save unreachable
+    // without a serviceLookup). `contactLookup` populates the client picker from
+    // the people directory and `clientKind:'contact'` scopes it to contacts.
     createAgendaPlugin({
       navPosition: 2,
       currency,
-      labels: { pageTitle: 'Calendars' },
+      labels: { pageTitle: 'Calendars', newAppointment: 'New Meeting' },
+      contactLookup,
+      clientKind: 'contact',
+      bookingTypes: [
+        {
+          id: 'appointment', label: 'Meeting', icon: 'Users', color: '#6366f1',
+          // client-only: no professional catalog and no services in the agency
+          // vertical, so canSubmit hinges solely on picking a contact.
+          fields: { client: true, professional: false, services: false, location: false, status: true },
+          requiresServices: false, requiresClient: true,
+        },
+        {
+          id: 'task', label: 'Task', icon: 'CheckSquare', color: '#f59e0b',
+          fields: { client: false, professional: false, services: false, location: false, status: true },
+          requiresServices: false, requiresClient: false,
+        },
+        {
+          id: 'block', label: 'Block', icon: 'Ban', color: '#6b7280',
+          fields: { client: false, professional: false, services: false, location: false, status: false },
+          requiresServices: false, requiresClient: false,
+        },
+      ],
     }),
     // 3 — CRM (Contacts + Opportunities/Pipeline) — reuses the existing plugin
     createCrmPlugin({
@@ -128,9 +154,11 @@ export const agencyOsAppConfig: FayzAppConfig = {
     }),
     // 10 — Memberships (courses)
     createCoursesPlugin({ navPosition: 10, navLabel: 'Memberships' }),
-    // 11 — Forms & Surveys
+    // 4 — Forms & Surveys (explicit navPosition; slot 4 was free between CRM=3
+    // and Marketing=5, so nav ordering is now deterministic).
     createCustomFormsPlugin({
       navSection: 'main',
+      navPosition: 4,
       labels: { pageTitle: 'Forms' },
     }),
     // 12 — Reporting
