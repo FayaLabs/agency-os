@@ -180,7 +180,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
       label: 'Contacts',
       icon: 'Contact',
       position: 2.5,
-      component: createCrudPage(contactEntity),
+      component: createCrudPage(contactEntity, { feature: 'contacts' }),
       permission: { feature: 'contacts', action: 'read' },
     },
   ],
