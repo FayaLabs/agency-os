@@ -1,6 +1,6 @@
 import React from 'react'
 import { createCrudPage, createArchetypeLookup, type FayzAppConfig } from '@fayz-ai/saas'
-import { createAgendaPlugin } from '@fayz-ai/plugin-agenda'
+import { createAgendaPlugin, createGoogleCalendarPlugin } from '@fayz-ai/plugin-agenda'
 import { createCrmPlugin } from '@fayz-ai/plugin-crm'
 import { createFinancialPlugin } from '@fayz-ai/plugin-financial'
 import { createCustomFormsPlugin } from '@fayz-ai/plugin-forms'
@@ -11,10 +11,12 @@ import { createAutomationsPlugin } from '@fayz-ai/plugin-automations'
 import { createSitesPlugin } from '@fayz-ai/plugin-sites'
 import { createReputationPlugin } from '@fayz-ai/plugin-reputation'
 
+import { createOpenBankingPlugin } from '../plugins/openbanking'
 import { Logo } from '../components/Logo'
 import { agencyDashboardPlugin } from './dashboard'
 import { agencyReportsPlugin } from './reports'
 import { agencyPermissions } from './permissions'
+import { agencyBilling } from './billing'
 import { agencyTheme } from './theme'
 import { contactEntity } from '../types/contact'
 
@@ -67,17 +69,44 @@ export const agencyOsAppConfig: FayzAppConfig = {
   },
   org: { adapter: supabaseEnabled ? 'supabase' : 'mock', multiOrg: true },
   permissions: agencyPermissions,
+  billing: agencyBilling,
   theme: agencyTheme,
   plugins: [
     // 0 — Dashboard
     agencyDashboardPlugin,
     // 1 — Conversations (unified inbox) — flagship new SDK plugin
     createConversationsPlugin({ navPosition: 1 }),
-    // 2 — Calendars (appointments / booking)
+    // 2 — Calendars (appointments / booking). An agency books MEETINGS with
+    // contacts — there is no service catalog, so the default 'appointment' type
+    // is redefined as a "Meeting" that requires a client but NO services (the
+    // stock default sets requiresServices:true, which made Save unreachable
+    // without a serviceLookup). `contactLookup` populates the client picker from
+    // the people directory and `clientKind:'contact'` scopes it to contacts.
     createAgendaPlugin({
       navPosition: 2,
       currency,
-      labels: { pageTitle: 'Calendars' },
+      labels: { pageTitle: 'Calendars', newAppointment: 'New Meeting' },
+      contactLookup,
+      clientKind: 'contact',
+      bookingTypes: [
+        {
+          id: 'appointment', label: 'Meeting', icon: 'Users', color: '#6366f1',
+          // client-only: no professional catalog and no services in the agency
+          // vertical, so canSubmit hinges solely on picking a contact.
+          fields: { client: true, professional: false, services: false, location: false, status: true },
+          requiresServices: false, requiresClient: true,
+        },
+        {
+          id: 'task', label: 'Task', icon: 'CheckSquare', color: '#f59e0b',
+          fields: { client: false, professional: false, services: false, location: false, status: true },
+          requiresServices: false, requiresClient: false,
+        },
+        {
+          id: 'block', label: 'Block', icon: 'Ban', color: '#6b7280',
+          fields: { client: false, professional: false, services: false, location: false, status: false },
+          requiresServices: false, requiresClient: false,
+        },
+      ],
     }),
     // 3 — CRM (Contacts + Opportunities/Pipeline) — reuses the existing plugin
     createCrmPlugin({
@@ -94,7 +123,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
       domain: 'agency',
       navPosition: 5,
       currency: { code: 'USD', locale: 'en-US', symbol: '$' },
-      modules: { landingPages: true },
+      modules: { landingPages: true, blog: true },
     }),
     // 6 — Automations (workflows)
     createAutomationsPlugin({ navPosition: 6 }),
@@ -127,13 +156,21 @@ export const agencyOsAppConfig: FayzAppConfig = {
     }),
     // 10 — Memberships (courses)
     createCoursesPlugin({ navPosition: 10, navLabel: 'Memberships' }),
-    // 11 — Forms & Surveys
+    // 4 — Forms & Surveys (explicit navPosition; slot 4 was free between CRM=3
+    // and Marketing=5, so nav ordering is now deterministic).
     createCustomFormsPlugin({
       navSection: 'main',
+      navPosition: 4,
       labels: { pageTitle: 'Forms' },
     }),
     // 12 — Reporting
     agencyReportsPlugin,
+    // Connector addons — reference integrations to standardize the connector
+    // contract (alongside RankLayer in Marketing). Each contributes a card to
+    // its host plugin's settings → Integrações tab (no top-level nav):
+    //   • Google Calendar → Agenda (OAuth)   • Tecnospeed PlugBank → Financeiro (api-key)
+    createGoogleCalendarPlugin(),
+    createOpenBankingPlugin(),
   ],
   pages: [
     // Contacts — the central people directory, placed just below Calendars
@@ -143,7 +180,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
       label: 'Contacts',
       icon: 'Contact',
       position: 2.5,
-      component: createCrudPage(contactEntity),
+      component: createCrudPage(contactEntity, { feature: 'contacts' }),
       permission: { feature: 'contacts', action: 'read' },
     },
   ],
