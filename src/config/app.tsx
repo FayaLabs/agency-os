@@ -16,6 +16,7 @@ import { Logo } from '../components/Logo'
 import { agencyDashboardPlugin } from './dashboard'
 import { agencyReportsPlugin } from './reports'
 import { agencyPermissions } from './permissions'
+import { agencyBilling } from './billing'
 import { agencyTheme } from './theme'
 import { contactEntity } from '../types/contact'
 
@@ -68,6 +69,7 @@ export const agencyOsAppConfig: FayzAppConfig = {
   },
   org: { adapter: supabaseEnabled ? 'supabase' : 'mock', multiOrg: true },
   permissions: agencyPermissions,
+  billing: agencyBilling,
   theme: agencyTheme,
   plugins: [
     // 0 — Dashboard
