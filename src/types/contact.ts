@@ -20,6 +20,8 @@ export const contactEntity: EntityDef<AgencyContact> = {
   namePlural: 'Contacts',
   icon: 'Contact',
   layout: 'person',
+  // Plan cap key — contacts count against the canonical `clients` limit.
+  limitKey: 'clients',
   displayField: 'name',
   subtitleField: 'email',
   defaultSort: 'name',
