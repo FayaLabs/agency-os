@@ -17,10 +17,17 @@ export const agencyBilling: NonNullable<FayzAppConfig['billing']> = {
       description: 'For freelancers getting started',
       features: [
         '1 client workspace',
+        'Up to 200 contacts',
         'Projects & tasks',
-        'Basic CRM',
-        '1 seat',
+        'Basic CRM (up to 50 deals)',
+        'Up to 2 seats',
       ],
+      // Freemium base + contacts (clients) cap 200 and deals cap 50. Premium
+      // (Pro+): marketing, reports, automations, sites and reputation.
+      entitlements: {
+        features: { marketing: false, reports: false, automations: false, sites: false, reputation: false },
+        limits: { users: 2, locations: 1, clients: 200, bookings_month: 150, deals: 50 },
+      },
     },
     {
       id: 'pro',
@@ -37,6 +44,10 @@ export const agencyBilling: NonNullable<FayzAppConfig['billing']> = {
         'Marketing & automations',
         'Up to 15 seats',
       ],
+      entitlements: {
+        features: { marketing: true, reports: true, automations: true, sites: true, reputation: true },
+        limits: { users: 15, locations: -1, clients: -1, bookings_month: -1, deals: -1 },
+      },
     },
     {
       id: 'agency',
@@ -54,6 +65,10 @@ export const agencyBilling: NonNullable<FayzAppConfig['billing']> = {
         'Advanced roles & permissions',
         'Unlimited seats',
       ],
+      entitlements: {
+        features: { marketing: true, reports: true, automations: true, sites: true, reputation: true },
+        limits: { users: -1, locations: -1, clients: -1, bookings_month: -1, deals: -1 },
+      },
     },
   ],
 }
