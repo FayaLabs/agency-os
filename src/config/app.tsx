@@ -75,7 +75,10 @@ export const agencyOsAppConfig: FayzAppConfig = {
     // 0 — Dashboard
     agencyDashboardPlugin,
     // 1 — Conversations (unified inbox) — flagship new SDK plugin
-    createConversationsPlugin({ navPosition: 1 }),
+    // The compose modal's contact picker is the SAME find-or-create flow the
+    // calendars use (shared ContactPicker). Agency people are 'contact's and
+    // this pool has no per-vertical extension table, so public.people alone.
+    createConversationsPlugin({ navPosition: 1, contactKind: 'contact', contactLookup }),
     // 2 — Calendars (appointments / booking). An agency books MEETINGS with
     // contacts — there is no service catalog, so the default 'appointment' type
     // is redefined as a "Meeting" that requires a client but NO services (the

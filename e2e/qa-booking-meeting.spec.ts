@@ -31,7 +31,6 @@ test('Save is gated until a contact is chosen, then enables (the fix)', async ({
   await expect(dialog.getByRole('button', { name: 'Save' })).toBeDisabled()
 
   // Pick a seeded contact from the client lookup.
-  await dialog.getByRole('button', { name: 'Add client' }).click()
   await dialog.getByRole('combobox', { name: /search client/i }).fill('QA')
   await page.getByRole('option', { name: CLIENT }).click()
 
@@ -41,31 +40,21 @@ test('Save is gated until a contact is chosen, then enables (the fix)', async ({
 })
 
 // ---------------------------------------------------------------------------
-// KNOWN PRODUCT BUG (expected-fail) — the Meeting does not persist E2E on this
-// pool. The Save-enable fix above is correct, but clicking Save fails because:
-//   1) plugin-agenda sends `assignee_id: ""` (empty string) for a booking type
-//      with professional:false → Postgres 22P02 "invalid input syntax for type
-//      uuid: \"\"" → POST /orders?select=id 400. Root cause:
-//      AppointmentModal.tsx:300 defaults professionalId to '' and passes it
-//      straight to data/supabase.ts:279 `assignee_id: input.professionalId`.
-//   2) the read model view `public.v_appointments` is missing on this pool
-//      (404), so even a persisted row never renders on the calendar grid.
-// When the SDK fixes (1), this test will start passing and Playwright will flag
-// it as "unexpectedly passed" — the signal to drop test.fail().
+// Was an expected-fail for two now-fixed causes, kept documented so the history
+// reads straight: (1) plugin-agenda posted `assignee_id: ""` for a booking type
+// with professional:false → uuid 22P02 → POST /orders 400; the provider now
+// writes `input.professionalId || null`. (2) `public.v_appointments` was missing
+// from this pool; it exists. Both verified before dropping test.fail().
 // ---------------------------------------------------------------------------
 test('a Meeting persists to the pool after Save', async ({ page }) => {
-  test.fail(true, 'plugin-agenda posts assignee_id:"" (uuid 400) + v_appointments 404 — see block comment')
-
   const sb = await tenantClient()
   const before = await countRows(sb, 'appointments')
 
   const dialog = await openNewMeeting(page)
-  await dialog.getByRole('button', { name: 'Add client' }).click()
   await dialog.getByRole('combobox', { name: /search client/i }).fill('QA')
   await page.getByRole('option', { name: CLIENT }).click()
   await dialog.getByRole('button', { name: 'Save' }).click()
 
-  // On success the modal closes; here it stays open because the write 400s.
   await expect(dialog).toBeHidden({ timeout: 10_000 })
   const after = await countRows(sb, 'appointments')
   expect(after).toBe(before + 1)
