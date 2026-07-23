@@ -25,7 +25,7 @@ export const agencyBilling: NonNullable<FayzAppConfig['billing']> = {
       // Freemium base + contacts (clients) cap 200 and deals cap 50. Premium
       // (Pro+): marketing, reports, automations, sites and reputation.
       entitlements: {
-        features: { marketing: false, reports: false, automations: false, sites: false, reputation: false },
+        features: { assistant: false, marketing: false, reports: false, automations: false, sites: false, reputation: false },
         limits: { users: 2, locations: 1, clients: 200, bookings_month: 150, deals: 50 },
       },
     },
@@ -45,7 +45,7 @@ export const agencyBilling: NonNullable<FayzAppConfig['billing']> = {
         'Up to 15 seats',
       ],
       entitlements: {
-        features: { marketing: true, reports: true, automations: true, sites: true, reputation: true },
+        features: { assistant: false, marketing: true, reports: true, automations: true, sites: true, reputation: true },
         limits: { users: 15, locations: -1, clients: -1, bookings_month: -1, deals: -1 },
       },
     },
@@ -56,6 +56,7 @@ export const agencyBilling: NonNullable<FayzAppConfig['billing']> = {
       priceMonthly: 99,
       description: 'For multi-brand agencies & networks',
       features: [
+        '*AI Assistant — 1,000 credits/mo',
         'Unlimited client workspaces',
         'Projects & tasks',
         'Full CRM & pipelines',
@@ -66,8 +67,8 @@ export const agencyBilling: NonNullable<FayzAppConfig['billing']> = {
         'Unlimited seats',
       ],
       entitlements: {
-        features: { marketing: true, reports: true, automations: true, sites: true, reputation: true },
-        limits: { users: -1, locations: -1, clients: -1, bookings_month: -1, deals: -1 },
+        features: { assistant: true, marketing: true, reports: true, automations: true, sites: true, reputation: true },
+        limits: { users: -1, locations: -1, clients: -1, bookings_month: -1, deals: -1, ai_credits_month: 1000 },
       },
     },
   ],
